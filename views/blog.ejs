@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Script Tutorials" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUinD</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="/javascripts/functions.js"></script>
+    <link href="/stylesheets/style2.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Oswald|Pacifico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" type="text/css" rel="stylesheet" media="all" />
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="title">
+            <a href="/"><h1><strong>RUinD</strong></h1></a>
+        </div>
+
+        <div class="menu">
+            <%if (uname.length > 0 ) {%>
+            <ul>
+                <li class="active"><a href="/">HOME</a></li>
+                <!--<li><a href="about.html">ABOUT</a></li>-->
+
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">HEY <%=uname%><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/logout">LOG-OUT</a></li>
+                        <li><a href="/by/<%=uname%>">YOUR ARTICLES</a></li>
+
+                        <li><a href="/createblog">CREATE ARTICLE</a></li>
+                        <li class="dropdown-submenu">
+                            <a class="test" tabindex="-1" href="#">EDIT ARTICLE <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <div id="edit" class="edit input-group">
+                                    <input id="editinput" type="text" class="form-control" placeholder="enter title" name="editinput">
+                                    <div id="in" class="input-group-btn">
+                                        <button class="btn btn-default" onclick="func2();">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <div class="clearfix"></div>
+                <script>
+                    $(document).ready(function(){
+                        $('.dropdown-submenu a.test').on("click", function(e){
+                            $(this).next('ul').toggle();
+                            e.stopPropagation();
+                            e.preventDefault();
+                        });
+                    });
+
+
+                </script>
+            </ul>
+            <%} else{%>
+                <ul>
+                    <li class="active"><a href="/">HOME</a></li>
+                    <!--<li><a href="about.html">ABOUT</a></li>-->
+                    <li><a href="/Signup">SIGN-UP</a></li>
+                    <li><a href="/login">LOG-IN</a></li>
+                    <div class="clearfix"></div>
+                </ul>
+            <%}%>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="mainpost">
+    <div class="container">
+        <div id="posts" class="col-md-8">
+            <%if(bm==1){%>
+            <div class="bmhead">
+                <h1>BOOKMARKED POSTS</h1>
+            </div>
+            <%}%>
+            <%for(var i=0;i<item.length;i++){%>
+            <div class="inner">
+                <figure class="forimg">
+                    <img src="/images/upload_images/<%=item[i].image%>" alt=""/>
+                </figure>
+                <div class="post">
+                    <h3><a href="/showpost/<%=item[i].ctitle%>"><%=item[i].ctitle%></a> By--<%=item[i].author%></h3>
+                    <p ><%- item[i].desc.replace(/\r\n/g, '<br/>') %></p>
+
+                </div>
+                <div class="desc">
+                    <a href="/by/<%=item[i].author%>"> View more posts by:<%=item[i].author%></a>
+                </div>
+                <div class="comm">
+                    <a href="/comment/<%=item[i]._id%>"> Leave a comment</a>
+                </div>
+                <div class="bm">
+                    <%
+                    if(bmarray.indexOf(item[i].ctitle)>=0 && uname.length>0){%>
+                     <a  href="/removebookmark/<%=item[i].ctitle%>" >Remove post from bookmarks  <i class="fas fa-bookmark"></i></a>
+                    <%}else{%>
+                        <a  href="/bookmark/<%=item[i].ctitle%>" >Bookmark this post  <i class="far fa-bookmark"></i></a>
+                        <%}%>
+                </div>
+
+                <div class="vote">
+                    <input type="hidden" id="htitle" value="<%=item[i].ctitle%>">
+                    <a title="upvote the post" id="upvote" data-title="<%item[i].ctitle%>" ><i id="uvote" class="fas fa-arrow-up"></i></a>
+                    <p id="target" ></p>
+                    <a  title="downvote the post" id="downvote" ><i id="dvote" class="fas fa-arrow-down"></i></a>
+
+                </div>
+
+                <script>
+                    $('#upvote').on('click',function(e) {
+                        e.preventDefault();
+
+                        var username="<%=uname%>";
+                        var type='up';
+                        console.log(username);
+                        if(username.length<=0) {
+                            window.location.href = "/login";
+                        }else{
+                            console.log($('#uvote').css('color'));
+                            if($('#uvote').css('color')==='rgb(200, 117, 252)'){
+                                type="";
+
+                                $('#uvote').css('color','#61079a');
+                            }
+                            else {
+                                $('#uvote').css('color', '#c875fc');
+                                $('#dvote').css('color', '#61079a');
+                            }
+                            const id = $('#htitle').val();
+                            console.log(type);
+                            $.ajax({
+                                url: '/givevote',
+                                type: 'POST',
+                                data: {id: id, voteType: type},
+                                success: function (result) {
+
+                                    var html = '';
+                                    html = '<p>' + result.voteCount + '</p>';
+                                    $('#target').html(html);
+
+
+
+                                }
+                            })
+                        }
+
+
+                    })
+
+                    $('#downvote').on('click',function(e) {
+                        e.preventDefault();
+                        var username="<%=uname%>";
+                        var type="down";
+                        console.log(username);
+                        if(username.length<=0) {
+                            window.location.href = "/login";
+                        }else{
+                            if($('#dvote').css('color')==='rgb(200, 117, 252)'){
+                                type="";
+                                $('#dvote').css('color','#61079a');
+                            }
+                            else {
+                                $('#dvote').css('color', '#c875fc');
+                                $('#uvote').css('color','#61079a');
+                            }
+                            const id = $('#htitle').val();
+                            console.log(id);
+                            $.ajax({
+                                url: '/givevote',
+                                type: 'POST',
+                                data: {id: id, voteType: type},
+                                success: function (result) {
+
+                                    var html = '';
+                                    html = '<p>' + result.voteCount + '</p>';
+                                    $('#target').html(html);
+
+
+
+                                }
+                            })
+                        }
+                    })
+
+                    $(document).ready(function () {
+                        const id = $('#htitle').val();
+                        $.ajax({
+                            url: '/getvote',
+                            type: 'POST',
+                            data: {id: id},
+                            success: function (result) {
+                                console.log(result.type);
+                                if(result.type==="up"){
+                                    $('#uvote').css('color','#c875fc');
+                                }
+                                else if(result.type==="down"){
+                                    $('#dvote').css('color','#c875fc');
+                                }
+                                var html = '';
+                                html = '<p>' + result.voteCount + '</p>';
+                                $('#target').html(html);
+
+                            }
+                        })
+                    })
+
+                        </script>
+
+                <div class="clearfix"></div>
+            </div>
+            <%}%>
+        </div>
+        <div id="" class="col-md-4">
+            <div class="about">
+                <h3>About the blog</h3>
+                <p>Depression is a serious mental illness that can interfere with a person's life. It can cause long-lasting and severe feelings of sadness, hopelessness, and a loss of interest in activities.It can also cause physical symptoms of pain, appetite changes, and sleep problems. The Centers for Disease Control and Prevention (CDC) found that nearly 10 percent of adults aged 40 to 59 years had depression between 2009 and 2012. However, despite its prevalence, depression isn't always easy to identify.That's why I started this blog.<br/>
+                    This blog will include posts on symptoms, signs, impacts, tips, diagnosis on depression.
+                </p>
+            </div>
+
+            <div class="recent">
+                <h3>RECENT POSTS</h3>
+                <ul>
+                    <%for(var j=0;j<arr.length&&j<4;j++){%>
+                    <li><a href="/showpost/<%=arr[j].ctitle%>"><%=arr[j].ctitle%></a></li>
+                    <%}%>
+
+                    <div class="search input-group">
+                        <input id="search" type="text" class="form-control" placeholder="Search" name="search">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" onclick="myfunc();">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </ul>
+            </div>
+            <div class="Authors">
+                <h3>ACTIVE AUTHORS</h3>
+                <ul>
+                    <%
+                    var arr2 = [];
+                    for(var i=0;i<arr.length;i++){
+                        arr2.push(arr[i].author);
+                    }
+                    arr2 = Array.from(new Set(arr2));
+                    for(var j=0;j<arr2.length&&j<4;j++){
+
+                    %>
+                    <li><a href="/by/<%=arr2[j]%>"><%=arr2[j]%></a></li>
+
+                    <%}%>
+                    <div class="search input-group">
+                        <input id="search2" type="text" class="form-control" placeholder="Search" name="search">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" onclick="myfunc2();">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+<div class="footer">
+    <div class="container" id="link">
+        <div class="linkhead">
+            <h1>CONTACT</h1>
+        </div>
+        <div class="link-in">
+            <div class="icon">
+                <i class="fab fa-facebook-square"></i>
+
+            </div>
+            <div class="icon">
+                <i class="far fa-envelope"></i>
+            </div>
+
+            <div class="icon">
+                <i class="fab fa-linkedin"></i>
+            </div>
+            <div class="icon">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="icon">
+                <i class="fas fa-phone"></i>
+            </div>
+        </div>
+
+        <div class="copy">
+            <p><span>&copy;</span>Khushboo Garg</p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Script Tutorials" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUinD</title>
+    <base href="/">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" >
+</head>
+<body>
+<div class="outer">
+    <div id ="inner" class="container">
+        <h2>Sign-Up</h2>
+        <form id="signupform" class="form-horizontal" action="" method="post" enctype="multipart/form-data" >
+            <div class="form-group">
+                <label id="flabel" class="control-label col-sm-5" for="fname">Full Name:</label>
+                <div class="col-sm-7">
+                    <input id="fin" type="text" class="form-control"   placeholder="Enter name" name="fname" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label id="flabel" class="control-label col-sm-5" for="email">Email:</label>
+                <div class="col-sm-7">
+                    <input id="fin" type="email" class="form-control"  placeholder="Enter email" name="email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="flabel" class="control-label col-sm-5" for="uname">User Name:</label>
+                <div class="col-sm-7">
+                    <input id="fin" type="text" class="form-control"  placeholder="Enter user name" name="uname" required>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label id="flabel" class="control-label col-sm-5" for="pwd">Password:</label>
+                <div class="col-sm-7">
+                    <input id="fin" type="password" class="form-control pwd"  placeholder="Enter password" name="pwd" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label id="flabel" class="control-label col-sm-5" for="cpwd">Confirm Password:</label>
+                <div class="col-sm-7">
+                    <input id="fin" type="password" class="form-control cpwd"  placeholder="Enter password" name="cpwd" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7">
+                    <button id="fbtn"  class="btn btn-default" >SignUp</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="ask">
+            <a href="/login">Already have an account</a>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

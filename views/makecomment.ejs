@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Script Tutorials" />
+    <script src=”http://http://yourwebsite.com:12345/socket.io/socket.io.js."></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUinD</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="/stylesheets/style2.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Oswald|Pacifico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" type="text/css" rel="stylesheet" media="all" />
+</head>
+<body>
+<div class="maincom">
+    <div class="container">
+        <div class="inner1">
+            <h3>Comments</h3>
+            <div class="inner2">
+                   <textarea  type="text" class="form-control" id="comment" placeholder="Type comment" rows="3" name=""></textarea>
+                    <br/>
+                    <input type="hidden" id="postId" class="form-control" value="<%=postId%>">
+                    <input type="hidden" id="commentby" class="form-control" value="<%=username%>">
+                    <input type="submit" value="Send" class="form-control" id="send">
+
+            </div>
+            <div class="inner3">
+
+                <div class="innercom">
+                    <%
+                        if(typeof comments != 'undefined' && comments !=null){
+                            comments.forEach(function (commentData) {
+                                %>
+                        <h6><%=commentData.commentby%></h6>
+                        <p><%=commentData.comment%> </p>
+                        <%
+                        });
+                        }
+                    %>
+                   </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var socket = io();
+    $('#send').click(function(){
+        var comment = $('#comment').val();
+        var postId = $('#postId').val();
+        var commentby=$('#commentby').val();
+        if(comment !== ''){
+            var data = {'comment': comment,'postId': postId,'commentby':commentby};
+            console.log("first"+comment+" "+postId+" "+commentby);
+            $('.innercom').append("<h6>"+commentby+"</h6>");
+            $('.innercom').append("<p>"+comment+"</p>");
+            $('#comment').val('');
+        }
+
+        socket.emit('comment',data);
+
+
+    });
+
+    socket.on('comment',function(data){
+        var postId = "<%= postId %>";
+        if(postId===data.postId){
+            console.log("sec"+comment+" "+postId+" "+commentby);
+            $('.innercom').append("<h6>"+data.commentby+"</h6>");
+            $('.innercom').append("<p>"+data.comment+"</p>");
+        }
+    });
+
+
+</script>
+</html>
